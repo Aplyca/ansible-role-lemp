@@ -1,0 +1,7 @@
+---
+php:
+  modules:
+    - php5.6-fpm
+  core:
+    expose_php: 'Off'
+    variables_order: 'EGPCS'
