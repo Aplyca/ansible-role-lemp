@@ -1,0 +1,31 @@
+---
+- name: Provision LEMP web server
+  hosts: all
+  roles:
+    - { role: Aplyca.LEMP, tags: ["lemp"] }
+  post_tasks:
+    - name: Test if NGINX is installed and running
+      uri:
+        url: "http://localhost"
+        status_code: 200
+      changed_when: False
+    - name: Test if MySQL extension for PHP is installed
+      shell: "php -i"
+      register: result_php
+      failed_when: "'mysql' not in result_php.stdout"
+      changed_when: False
+    #- name: Test if PHP FPM is installed
+    #  shell: "service php5-fpm status"
+    #  register: result_phpfpm
+    #  failed_when: "'start/running' not in result_phpfpm.stdout"
+    #  changed_when: False
+    - name: Test if MySQL is running
+      become: yes
+      shell: "mysqladmin status"
+      changed_when: False
+    #- name: Test if Nginx conf is ok
+    #  become: yes
+    #  shell: "nginx -t"
+    #  register: result_nginx_test
+    #  failed_when: "'configuration file /etc/nginx/nginx.conf test is successful' not in result_nginx_test.stdout"
+    #  changed_when: False
